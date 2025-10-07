@@ -18,6 +18,7 @@ jobs:
           username: ubuntu            # EC2 default user for Ubuntu AMIs
           key: ${{ secrets.PRIVATE_SSH }}  # your .pem content stored as GitHub secret
           port: 22
+          verbose: true
           script: |
             whoami
             ls -la
