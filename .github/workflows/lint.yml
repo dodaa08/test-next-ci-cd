@@ -20,16 +20,39 @@ jobs:
           port: 22
           verbose: true
           script: |
+            # Go to home folder
             cd ~
+
+            # Install Node.js (if not installed)
+            if ! command -v node > /dev/null; then
+              echo "Node.js not found, installing..."
+              curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+              sudo apt install -y nodejs
+            fi
+
+            # Install pm2 globally (optional, recommended for production)
+            if ! command -v pm2 > /dev/null; then
+              sudo npm install -g pm2
+            fi
+
+            # Clone or pull repo
             if [ -d "ci-test-be" ]; then
               cd ci-test-be
               git reset --hard
               git pull origin main
             else
-              git clone https://github.com/dodaa08/test-next-ci-cd.git ci-test-be
+              git clone https://github.com/yourusername/your-repo.git ci-test-be
               cd ci-test-be
             fi
 
+            # Install dependencies
             npm install
+
+            # Build project
             npm run build
-            npm run dev
+
+            # Start or restart app with pm2
+            pm2 startOrRestart ecosystem.config.js --env production
+
+            # Optional: show running processes
+            pm2 list
