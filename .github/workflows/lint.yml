@@ -1,0 +1,23 @@
+name: Remote SSH Command
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Execute remote SSH commands using private key
+        uses: appleboy/ssh-action@v1
+        with:
+          host: 54.83.89.157          # literal IP, no ${{ }} here
+          username: ubuntu            # EC2 default user for Ubuntu AMIs
+          key: ${{ secrets.PRIVATE_SSH }}  # your .pem content stored as GitHub secret
+          port: 22
+          script: |
+            whoami
+            ls -la
